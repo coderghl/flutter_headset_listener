@@ -29,9 +29,11 @@ class _HomeAppState extends State<HomeApp> {
   bool headsetIsConnect = false;
 
   var flutterHeadsetListener = FlutterHeadsetListener();
+  void init() async {
+    await flutterHeadsetListener.requestPermission();
 
-  @override
-  void initState() {
+    btHeadsetIsConnect = await flutterHeadsetListener.getBTHeadsetIsConnected();
+
     flutterHeadsetListener.headsetStateStream.listen((event) {
       debugPrint(event.toString());
       if (event == HeadsetState.btConnected) {
@@ -58,6 +60,12 @@ class _HomeAppState extends State<HomeApp> {
         });
       }
     });
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    init();
     super.initState();
   }
 

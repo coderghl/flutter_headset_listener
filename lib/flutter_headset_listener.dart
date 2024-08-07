@@ -1,23 +1,30 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
+import 'dart:io';
 import 'package:flutter/services.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'headset_state.dart';
 
 class FlutterHeadsetListener {
   static const MethodChannel _channel =
       MethodChannel('flutter_headset_listener');
-  static const EventChannel _eventChannel =
-      EventChannel('flutter_headset_listener');
 
   final StreamController<HeadsetState> _controller =
       StreamController<HeadsetState>.broadcast();
 
   Stream<HeadsetState> get headsetStateStream => _controller.stream;
 
-  void dispose() {
-    _controller.close();
+  Future<bool> getBTHeadsetIsConnected() async {
+    return await _channel.invokeMethod('getBTHeadsetIsConnected');
+  }
+
+  Future<bool> getHeadsetIsPlugged() async {
+    return await _channel.invokeMethod('getHeadsetIsPlugged');
+  }
+
+  Future<bool> requestPermission() async {
+    if (Platform.isIOS) return true;
+
+    return await Permission.bluetoothConnect.request().isGranted;
   }
 
   FlutterHeadsetListener() {
@@ -37,23 +44,9 @@ class FlutterHeadsetListener {
           break;
       }
     });
+  }
 
-    _eventChannel.receiveBroadcastStream().listen((event) {
-      debugPrint("receiveBroadcastStream: $event");
-      switch (event) {
-        case 'onHeadsetPlug':
-          _controller.add(HeadsetState.plugged);
-          break;
-        case 'onHeadsetUnPlug':
-          _controller.add(HeadsetState.unPlugged);
-          break;
-        case 'onBTHeadsetConnect':
-          _controller.add(HeadsetState.btConnected);
-          break;
-        case 'onBTHeadsetDisconnect':
-          _controller.add(HeadsetState.btDisconnected);
-          break;
-      }
-    });
+  void dispose() {
+    _controller.close();
   }
 }

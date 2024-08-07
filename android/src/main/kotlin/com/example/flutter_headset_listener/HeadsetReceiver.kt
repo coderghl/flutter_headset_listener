@@ -15,9 +15,11 @@ class HeadsetReceiver(private val listener: (HeadsetState) -> Unit) : BroadcastR
                     0 -> listener(HeadsetState.Unplugged)
                 }
             }
+
             BluetoothDevice.ACTION_ACL_CONNECTED -> {
                 listener(HeadsetState.BTConnected)
             }
+
             BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                 listener(HeadsetState.BTDisconnected)
             }
