@@ -71,7 +71,7 @@ public class FlutterHeadsetListenerPlugin: NSObject, FlutterPlugin {
         switch reason {
         case .newDeviceAvailable, .oldDeviceUnavailable, .routeConfigurationChange:
             updateBluetoothHeadsetConnection()
-            updateWiredHeadsetConnection()
+            // updateWiredHeadsetConnection()
         default:
             break
         }
@@ -98,24 +98,24 @@ public class FlutterHeadsetListenerPlugin: NSObject, FlutterPlugin {
     }
 
     // Headset
-    private func updateWiredHeadsetConnection() {
-        let session = AVAudioSession.sharedInstance()
-        let outputs = session.currentRoute.outputs
-        var isPlugged = false
+    // private func updateWiredHeadsetConnection() {
+    //     let session = AVAudioSession.sharedInstance()
+    //     let outputs = session.currentRoute.outputs
+    //     var isPlugged = false
         
-        for output in outputs {
-            if output.portType == AVAudioSession.Port.headphones {
-                isPlugged = true
-                break
-            }
-        }
+    //     for output in outputs {
+    //         if output.portType == AVAudioSession.Port.headphones {
+    //             isPlugged = true
+    //             break
+    //         }
+    //     }
         
-        if(isPlugged){
-            channel?.invokeMethod("onHeadsetPlug", arguments: isPlugged)
-        }else{
-            channel?.invokeMethod("onHeadsetUnPlug", arguments: isPlugged)
-        }
-    }
+    //     if(isPlugged){
+    //         channel?.invokeMethod("onHeadsetPlug", arguments: isPlugged)
+    //     }else{
+    //         channel?.invokeMethod("onHeadsetUnPlug", arguments: isPlugged)
+    //     }
+    // }
 
 
     deinit {

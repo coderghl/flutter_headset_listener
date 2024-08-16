@@ -35,8 +35,8 @@ class FlutterHeadsetListenerPlugin : FlutterPlugin, MethodChannel.MethodCallHand
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_HEADSET_PLUG)
-            addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+            addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+            addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         }
 
         flutterPluginBinding.applicationContext.registerReceiver(headsetReceiver, filter)
